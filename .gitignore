@@ -1,0 +1,80 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+*.dll
+*.exe
+*.app
+*.pdb
+*.cache
+*.mdb
+
+# Publish folder
+publish/
+out/
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+*.nuspec
+
+# Rider IDE files
+.idea/
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Environment files
+.env
+*.env
+
+# Logs
+*.log
+logs/
+log/
+
+# Database
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker
+**/Dockerfile
+**/docker-compose.yml
+.dockerignore
+docker-compose.override.yml
+docker-compose.prod.yml
+
+# Kubernetes manifests (optional)
+*.yaml
+*.yml
+
+# Test results
+TestResults/
+*.trx
+coverage/
+*.coverage
+*.coveragexml
+
+# Debug
+*.psess
+*.vsp
+*.vspx
+*.vspscc
+*.vssscc
