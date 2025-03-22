@@ -1,24 +1,26 @@
+using rr_events.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// 💡 Register AppDbContext and use connection string from appsettings.json
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Enable Swagger in dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection(); // can leave this commented for now
-
 app.UseAuthorization();
 
-// ✅ Map controller routes
-app.MapControllers(); 
+app.MapControllers();
 
 app.Run();
