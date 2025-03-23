@@ -12,7 +12,7 @@ using rr_events.Data;
 namespace rr_events.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250322065450_InitialCreate")]
+    [Migration("20250323060409_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
