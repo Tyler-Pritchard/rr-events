@@ -4,15 +4,15 @@ namespace rr_events.DTOs
 {
     /// <summary>
     /// Represents the data required to update an existing event.
-    /// </summary>
+        /// </summary>
     public class UpdateEventRequest
     {
         [Required]
-        public int Id { get; set; } // ID of the event to update
+        public int Id { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "Title length can't exceed 100 characters.")]
-        public string Title { get; set; }
+        [StringLength(100)]
+        public required string Title { get; set; }
 
         [StringLength(500)]
         public string? Description { get; set; }
@@ -24,11 +24,12 @@ namespace rr_events.DTOs
         public DateTime EndTimeUtc { get; set; }
 
         [Required]
-        public string Location { get; set; }
+        public required string Location { get; set; }
 
         public bool IsPrivate { get; set; }
 
         [Url]
         public string? TicketLink { get; set; }
     }
+
 }

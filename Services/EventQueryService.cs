@@ -3,7 +3,7 @@ using rr_events.Data;
 using rr_events.DTOs;
 using rr_events.Models;
 
-namespace rr_events.Controllers
+namespace rr_events.Services
 {
     /// <summary>
     /// Handles read operations related to events.

@@ -1,5 +1,5 @@
 using System;
-using rr_events.Services.Interfaces;
+using rr_events.Models.Interfaces;
 
 namespace rr_events.Models
 {
