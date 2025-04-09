@@ -9,8 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 // ------------------------
 // 🔧 Service Configuration
 // ------------------------
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 builder.Services.AddScoped<IEventQueryService, EventQueryService>();
 builder.Services.AddScoped<IEventCommandService, EventCommandService>();
@@ -26,9 +29,6 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-// ------------------------
-// ⚙️ App Pipeline Configuration
-// ------------------------
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -40,3 +40,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+// Required for integration testing
+public partial class Program { }
