@@ -95,8 +95,8 @@ docker-compose up --build rr-events
 
 - [x] Initialize .NET service scaffold
 - [x] Replace boilerplate with `/api/events/health`
-- [ ] Add Event model and DB schema
-- [ ] Implement CRUD endpoints
+- [x] Add Event model and DB schema
+- [x] Implement CRUD endpoints
 - [ ] Nightly archive job
 - [ ] Role-based admin access (post rr-auth upgrade)
 - [ ] Ticket integration via rr-payments service
