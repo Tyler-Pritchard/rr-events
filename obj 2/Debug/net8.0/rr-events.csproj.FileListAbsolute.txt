@@ -1,0 +1,8 @@
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.csproj.AssemblyReference.cache
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.GeneratedMSBuildEditorConfig.editorconfig
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.AssemblyInfoInputs.cache
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.AssemblyInfo.cs
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.csproj.CoreCompileInputs.cache
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.MvcApplicationPartsAssemblyInfo.cs
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.MvcApplicationPartsAssemblyInfo.cache
+/Users/tylerpritchard/Desktop/Projects/RobRich/rrapp/rr-events/obj/Debug/net8.0/rr-events.sourcelink.json
