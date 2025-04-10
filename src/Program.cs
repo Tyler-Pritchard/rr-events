@@ -15,13 +15,23 @@ if (!builder.Environment.IsEnvironment("Testing"))
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 }
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // or whatever port your frontend uses
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddScoped<IEventQueryService, EventQueryService>();
 builder.Services.AddScoped<IEventCommandService, EventCommandService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Swagger (with XML comments)
 builder.Services.AddSwaggerGen(c =>
 {
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -29,6 +39,9 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
+// ------------------------
+// ⚙️ App Pipeline Configuration
+// ------------------------
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -37,8 +50,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+
+app.UseCors("AllowFrontend");
+
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
 
 // Required for integration testing

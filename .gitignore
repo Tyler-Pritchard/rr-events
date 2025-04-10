@@ -78,3 +78,6 @@ coverage/
 *.vspx
 *.vspscc
 *.vssscc
+
+
+rr-events/src/net8.0

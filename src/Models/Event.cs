@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 using rr_events.Models.Interfaces;
 
 namespace rr_events.Models
 {
     /// <summary>
-    /// Represents a general event, either online or in-person.
+    /// Represents a Rob Rich event, either upcoming or past.
     /// </summary>
     public class Event : IDescribable
     {
@@ -34,19 +37,71 @@ namespace rr_events.Models
         public DateTime EndTimeUtc { get; set; }
 
         /// <summary>
-        /// Physical or virtual location name.
+        /// City and country or general location string.
         /// </summary>
         public required string Location { get; set; }
+
+        /// <summary>
+        /// Name of the venue where the event is held.
+        /// </summary>
+        public string? Venue { get; set; }
+
+        /// <summary>
+        /// Name of the tour this event is part of.
+        /// </summary>
+        public string? TourName { get; set; }
+
+        /// <summary>
+        /// Whether all tickets are sold out.
+        /// </summary>
+        public bool TicketsSoldOut { get; set; }
+
+        /// <summary>
+        /// Link to purchase or register for tickets.
+        /// </summary>
+        public string? TicketLink { get; set; }
+
+        /// <summary>
+        /// Whether enhanced experience packages are sold out.
+        /// </summary>
+        public bool EnhancedExperienceSoldOut { get; set; }
+
+        /// <summary>
+        /// Optional link to the enhanced experience page.
+        /// </summary>
+        public string? EnhancedExperienceLink { get; set; }
+
+        /// <summary>
+        /// Optional list of supporting acts (e.g., openers).
+        /// </summary>
+        [NotMapped]
+        public List<string>? SupportingActs
+        {
+            get => string.IsNullOrEmpty(SupportingActsSerialized)
+                ? new List<string>()
+                : JsonSerializer.Deserialize<List<string>>(SupportingActsSerialized);
+            set => SupportingActsSerialized = JsonSerializer.Serialize(value);
+        }
+
+        /// <summary>
+        /// Serialized version of SupportingActs for EF Core.
+        /// </summary>
+        public string? SupportingActsSerialized { get; set; }
+
+        /// <summary>
+        /// Optional presale details, such as dates or access codes.
+        /// </summary>
+        public PresaleDetails? FanClubPresale { get; set; }
+
+        /// <summary>
+        /// Optional image URL for the event.
+        /// </summary>
+        public string? EventImageUrl { get; set; }
 
         /// <summary>
         /// Whether the event is private or publicly visible.
         /// </summary>
         public bool IsPrivate { get; set; }
-
-        /// <summary>
-        /// Optional link to purchase or register for the event.
-        /// </summary>
-        public string? TicketLink { get; set; }
 
         /// <summary>
         /// Returns a human-readable summary of the event.
