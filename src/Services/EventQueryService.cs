@@ -12,6 +12,7 @@ namespace rr_events.Services
     {
         Task<List<EventResponse>> GetAllEventsAsync();
         Task<List<EventResponse>> GetUpcomingEventsAsync();
+        Task<EventResponse?> GetEventBySlugAsync(string slug);
     }
 
     /// <summary>
@@ -44,6 +45,15 @@ namespace rr_events.Services
 
             return upcoming.Select(MapToResponse).ToList();
         }
+        
+        public async Task<EventResponse?> GetEventBySlugAsync(string slug)
+        {
+            var ev = await _context.Events
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Slug == slug);
+
+            return ev == null ? null : MapToResponse(ev);
+        }
 
         private static EventResponse MapToResponse(Event e)
         {
@@ -55,6 +65,7 @@ namespace rr_events.Services
                 StartTimeUtc = e.StartTimeUtc,
                 EndTimeUtc = e.EndTimeUtc,
                 Location = e.Location,
+                Slug = e.Slug,
                 IsPrivate = e.IsPrivate,
                 TicketLink = e.TicketLink
             };

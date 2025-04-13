@@ -9,11 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // ------------------------
 // 🔧 Service Configuration
 // ------------------------
-if (!builder.Environment.IsEnvironment("Testing"))
-{
-    builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-}
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
@@ -44,6 +41,13 @@ builder.Services.AddSwaggerGen(c =>
 // ------------------------
 var app = builder.Build();
 
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    DbInitializer.Seed(dbContext);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -56,12 +60,6 @@ app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    DbInitializer.Seed(dbContext);
-}
 
 app.Run();
 

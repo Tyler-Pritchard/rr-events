@@ -1,26 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using rr_events.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace rr_events.Data
 {
-    /// <summary>
-    /// Static class for initializing the database with sample event data.
-    /// </summary>
     public static class DbInitializer
     {
-        /// <summary>
-        /// Seeds the database with upcoming and past events if none exist.
-        /// </summary>
-        /// <param name="context">The application's database context.</param>
+
         public static void Seed(AppDbContext context)
         {
             context.Database.Migrate();
 
             if (context.Events.Any())
-            {
-                return; // DB has already been seeded
-            }
+                return;
 
             var upcomingEvent = new Event
             {
@@ -40,7 +33,7 @@ namespace rr_events.Data
                 EventImageUrl = null,
                 IsPrivate = false,
                 FanClubPresale = null,
-                Slug = "2025-04-25-olympia-wa",
+                Slug = "2025-04-25-downtown-olympia-wa"
             };
 
             var pastEvent = new Event
@@ -60,8 +53,8 @@ namespace rr_events.Data
                 SupportingActsSerialized = JsonSerializer.Serialize(new List<string> { "Profane Sass", "The Buskers" }),
                 EventImageUrl = null,
                 IsPrivate = false,
-                FanClubPresale = null
-                Slug = "2023-06-15-tacoma-wa",
+                FanClubPresale = null,
+                Slug = "2023-06-15-tacoma-wa"
             };
 
             context.Events.AddRange(upcomingEvent, pastEvent);

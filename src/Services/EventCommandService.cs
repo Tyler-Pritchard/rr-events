@@ -50,6 +50,8 @@ namespace rr_events.Services
         /// <inheritdoc />
         public async Task<EventResponse> CreateEventAsync(CreateEventRequest request)
         {
+            var slug = $"{request.StartTimeUtc:yyyy-MM-dd}-{request.Location}".ToLower().Replace(" ", "-");
+
             var newEvent = new Event
             {
                 Title = request.Title,
@@ -57,6 +59,7 @@ namespace rr_events.Services
                 StartTimeUtc = request.StartTimeUtc,
                 EndTimeUtc = request.EndTimeUtc,
                 Location = request.Location,
+                Slug = slug,
                 IsPrivate = request.IsPrivate,
                 TicketLink = request.TicketLink
             };
@@ -75,7 +78,8 @@ namespace rr_events.Services
                 EndTimeUtc = newEvent.EndTimeUtc,
                 Location = newEvent.Location,
                 IsPrivate = newEvent.IsPrivate,
-                TicketLink = newEvent.TicketLink
+                TicketLink = newEvent.TicketLink,
+                Slug = newEvent.Slug
             };
         }
 
@@ -110,7 +114,8 @@ namespace rr_events.Services
                 EndTimeUtc = existingEvent.EndTimeUtc,
                 Location = existingEvent.Location,
                 IsPrivate = existingEvent.IsPrivate,
-                TicketLink = existingEvent.TicketLink
+                TicketLink = existingEvent.TicketLink,
+                Slug = existingEvent.Slug 
             };
         }
 

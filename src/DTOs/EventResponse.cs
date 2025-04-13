@@ -17,6 +17,8 @@ namespace rr_events.DTOs
 
         public string Location { get; set; } = string.Empty;
 
+        public required string Slug { get; set; }
+
         public bool IsPrivate { get; set; }
 
         public string? TicketLink { get; set; }

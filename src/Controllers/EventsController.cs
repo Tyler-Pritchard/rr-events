@@ -23,6 +23,13 @@ namespace rr_events.Controllers
             _logger = logger;
         }
 
+        [HttpGet("{slug}")]
+        public async Task<ActionResult<EventResponse>> GetEventBySlug(string slug)
+        {
+            var ev = await _queryService.GetEventBySlugAsync(slug);
+            return ev == null ? NotFound() : Ok(ev);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllEvents()
         {
@@ -77,15 +84,16 @@ namespace rr_events.Controllers
             }
         }
 
-        /// <summary>
-        /// Updates an existing event by ID.
-        /// </summary>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventRequest updatedEvent)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new { message = "Invalid data.", errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+                return BadRequest(new
+                {
+                    message = "Invalid data.",
+                    errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
+                });
             }
 
             try
@@ -105,9 +113,6 @@ namespace rr_events.Controllers
             }
         }
 
-        /// <summary>
-        /// Deletes an event by ID.
-        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
