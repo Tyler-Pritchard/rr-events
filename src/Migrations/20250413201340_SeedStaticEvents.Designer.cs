@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using rr_events.Data;
@@ -11,9 +12,11 @@ using rr_events.Data;
 namespace rr_events.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413201340_SeedStaticEvents")]
+    partial class SeedStaticEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +80,43 @@ namespace rr_events.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Events");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Opening night of the West Coast tour",
+                            EndTimeUtc = new DateTime(2025, 4, 26, 23, 0, 0, 0, DateTimeKind.Utc),
+                            EnhancedExperienceSoldOut = false,
+                            EventImageUrl = "https://example.com/seattle.png",
+                            IsPrivate = false,
+                            Location = "Seattle, WA",
+                            StartTimeUtc = new DateTime(2025, 4, 25, 19, 0, 0, 0, DateTimeKind.Utc),
+                            SupportingActsSerialized = "[\"Local Opener\"]",
+                            TicketLink = "https://example.com/seattle-tickets",
+                            TicketsSoldOut = true,
+                            Title = "Rob Rich: Seattle Show",
+                            TourName = "Dark Roads Tour",
+                            Venue = "Neptune Theater"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Next stop on the tour",
+                            EndTimeUtc = new DateTime(2025, 4, 18, 22, 13, 39, 491, DateTimeKind.Utc).AddTicks(8560),
+                            EnhancedExperienceLink = "https://example.com/portland-vip",
+                            EnhancedExperienceSoldOut = false,
+                            EventImageUrl = "https://example.com/portland.png",
+                            IsPrivate = false,
+                            Location = "Portland, OR",
+                            StartTimeUtc = new DateTime(2025, 4, 18, 20, 13, 39, 491, DateTimeKind.Utc).AddTicks(8460),
+                            SupportingActsSerialized = "[\"Special Guest\"]",
+                            TicketLink = "https://example.com/portland-tickets",
+                            TicketsSoldOut = false,
+                            Title = "Rob Rich: Portland Show",
+                            TourName = "Dark Roads Tour",
+                            Venue = "Crystal Ballroom"
+                        });
                 });
 
             modelBuilder.Entity("rr_events.Models.Event", b =>

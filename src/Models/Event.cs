@@ -104,6 +104,19 @@ namespace rr_events.Models
         public bool IsPrivate { get; set; }
 
         /// <summary>
+        /// Track event as upcoming event.
+        /// </summary>
+        [NotMapped]
+        public bool IsUpcoming => EndTimeUtc > DateTime.UtcNow;
+
+        /// <summary>
+        /// Track event as past event.
+        /// </summary>
+        [NotMapped]
+        public bool IsPast => EndTimeUtc <= DateTime.UtcNow;
+
+
+        /// <summary>
         /// Returns a human-readable summary of the event.
         /// </summary>
         public virtual string Describe()
