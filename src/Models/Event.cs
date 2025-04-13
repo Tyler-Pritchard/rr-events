@@ -47,6 +47,11 @@ namespace rr_events.Models
         public string? Venue { get; set; }
 
         /// <summary>
+        /// Event ID for dynamic URL naming
+        /// </summary>
+        public required string Slug { get; set; }
+
+        /// <summary>
         /// Name of the tour this event is part of.
         /// </summary>
         public string? TourName { get; set; }

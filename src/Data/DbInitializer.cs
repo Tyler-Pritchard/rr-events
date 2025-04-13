@@ -39,7 +39,8 @@ namespace rr_events.Data
                 SupportingActsSerialized = JsonSerializer.Serialize(new List<string>()),
                 EventImageUrl = null,
                 IsPrivate = false,
-                FanClubPresale = null
+                FanClubPresale = null,
+                Slug = "2025-04-25-olympia-wa",
             };
 
             var pastEvent = new Event
@@ -60,6 +61,7 @@ namespace rr_events.Data
                 EventImageUrl = null,
                 IsPrivate = false,
                 FanClubPresale = null
+                Slug = "2023-06-15-tacoma-wa",
             };
 
             context.Events.AddRange(upcomingEvent, pastEvent);
