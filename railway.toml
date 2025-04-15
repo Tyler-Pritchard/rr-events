@@ -1,5 +1,5 @@
 [build]
-command = "dotnet build --configuration Release"
+command = "dotnet publish rr-events.csproj -c Release -o out"
 
 [start]
 command = "dotnet rr-events.dll"
