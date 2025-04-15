@@ -79,5 +79,7 @@ coverage/
 *.vspscc
 *.vssscc
 
+Dockerfile
+
 
 rr-events/src/net8.0
