@@ -1,0 +1,56 @@
+.
+├── README.md
+├── file_tree.txt
+├── nixpacks.json
+├── rr-events.Tests
+│   ├── CustomWebApplicationFactory.cs
+│   ├── EventsEndpointTests.cs
+│   ├── UnitTest1.cs
+│   ├── bin 2
+│   ├── obj 2
+│   └── rr-events.Tests.csproj
+├── rr-events.sln
+└── src
+    ├── Controllers
+    │   ├── DbTestController.cs
+    │   └── EventsController.cs
+    ├── DTOs
+    │   ├── CreateEventRequest.cs
+    │   ├── EventResponse.cs
+    │   └── UpdateEventRequest.cs
+    ├── Data
+    │   ├── AppDbContext.cs
+    │   └── DbInitializer.cs
+    ├── Migrations
+    │   ├── 20250323060409_InitialCreate.Designer.cs
+    │   ├── 20250323060409_InitialCreate.cs
+    │   ├── 20250410063819_ExpandEventModel.Designer.cs
+    │   ├── 20250410063819_ExpandEventModel.cs
+    │   ├── 20250410070336_SeedEventsWithOwnedType.Designer.cs
+    │   ├── 20250410070336_SeedEventsWithOwnedType.cs
+    │   ├── 20250413201340_SeedStaticEvents.Designer.cs
+    │   ├── 20250413201340_SeedStaticEvents.cs
+    │   ├── 20250413201717_InitialSeedData.Designer.cs
+    │   ├── 20250413201717_InitialSeedData.cs
+    │   ├── 20250413220725_SyncModelWithSlug.Designer.cs
+    │   ├── 20250413220725_SyncModelWithSlug.cs
+    │   └── AppDbContextModelSnapshot.cs
+    ├── Models
+    │   ├── Event.cs
+    │   ├── InPersonEvent.cs
+    │   └── PresaleDetails.cs
+    ├── Program.cs
+    ├── Properties
+    │   └── launchSettings.json
+    ├── Services
+    │   ├── EventCommandService.cs
+    │   ├── EventQueryService.cs
+    │   └── Interfaces
+    │       └── IDescribable.cs
+    ├── appsettings.Development.json
+    ├── appsettings.json
+    ├── net8.0
+    ├── rr-events.csproj
+    └── rr-events.http
+
+14 directories, 40 files
