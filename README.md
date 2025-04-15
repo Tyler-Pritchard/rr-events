@@ -61,7 +61,7 @@ rr-events/
 cd rr-events
 
 # Run the service
-dotnet run
+dotnet run --project src/rr-events.csproj
 
 # Access sample health check
 http://localhost:5243/api/events/health
