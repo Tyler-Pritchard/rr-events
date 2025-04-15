@@ -1,0 +1,5 @@
+[build]
+command = "dotnet build --configuration Release"
+
+[start]
+command = "dotnet rr-events.dll"
