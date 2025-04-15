@@ -1,6 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "dotnet publish src/rr-events.csproj -c Release -o out"
-
-[start]
-startCommand = "dotnet out/rr-events.dll"
