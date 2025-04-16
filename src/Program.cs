@@ -57,6 +57,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
 // ------------------------
 // 🔧 Register Services
 // ------------------------
+Console.WriteLine($"🔍 Using connection string: {connectionString}");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
@@ -80,10 +81,21 @@ builder.Services.AddSwaggerGen(c =>
 {
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+    // c.IncludeXmlComments(xmlPath);
 });
 
-var app = builder.Build();
+WebApplication app;
+
+try
+{
+    app = builder.Build();
+}
+catch (Exception ex)
+{
+    Console.WriteLine("🔥 Exception during app building:");
+    Console.WriteLine(ex.ToString());
+    throw;
+}
 
 // ------------------------
 // 🚀 Middleware Pipeline & Seeding
