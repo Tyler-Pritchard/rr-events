@@ -8,7 +8,11 @@ namespace rr_events.Data
     {
         public static void Seed(AppDbContext context, IWebHostEnvironment env, bool forceSeed = false)
         {
-            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            });
+
             var logger = loggerFactory.CreateLogger("DbInitializer");
 
             try
@@ -20,23 +24,33 @@ namespace rr_events.Data
                 }
 
                 logger.LogInformation("🔧 Applying migrations...");
-                context.Database.Migrate();
-                logger.LogInformation("✅ Migrations complete.");
+                context.Database.Migrate(); // ensures the schema is created
 
-                if (context.Events.Any())
+                var anyEvents = false;
+
+                try
+                {
+                    anyEvents = context.Events.Any(); // throws if Events table doesn't exist
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning("⚠️ Couldn't check if events exist: " + ex.Message);
+                }
+
+                if (anyEvents)
                 {
                     logger.LogInformation("📂 Events already exist — skipping seed.");
                     return;
                 }
 
-                logger.LogInformation("🌱 Seeding development sample events...");
+                logger.LogInformation("🌱 Seeding events...");
                 context.Events.AddRange(SeedData.Events);
                 context.SaveChanges();
-                logger.LogInformation("✅ Seed completed.");
+                logger.LogInformation("✅ Seed completed. Total events added: " + SeedData.Events.Count);
             }
             catch (Exception ex)
             {
-                logger.LogCritical(ex, "🔥 Error during seed.");
+                logger.LogCritical(ex, "🔥 Error during seeding.");
                 throw;
             }
         }
