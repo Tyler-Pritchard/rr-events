@@ -17,15 +17,15 @@ namespace rr_events.Data
 
             try
             {
+                if (env.IsProduction())
+                {
+                    logger.LogInformation("📦 Production environment: skipping seed and migration.");
+                    return;
+                }
+
                 logger.LogInformation("🔧 Applying migrations...");
                 context.Database.Migrate();
                 logger.LogInformation("✅ Migrations complete.");
-
-                if (env.IsProduction())
-                {
-                    logger.LogInformation("📦 Production environment: skipping seed.");
-                    return;
-                }
 
                 if (context.Events.Any())
                 {
