@@ -1,5 +1,4 @@
 using rr_events.Data;
-using rr_events.Controllers;
 using rr_events.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -9,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ------------------------
 // 🔧 Service Configuration
 // ------------------------
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // or whatever port your frontend uses
+        policy.WithOrigins("http://localhost:3000", "https://www.robrich.band")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -36,20 +36,29 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-// ------------------------
-// ⚙️ App Pipeline Configuration
-// ------------------------
 var app = builder.Build();
 
-if (!app.Environment.IsEnvironment("Testing"))
-{
-    using var scope = app.Services.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    DbInitializer.Seed(dbContext);
-}
+// ------------------------
+// 🚀 Production-safe Startup Logic
+// ------------------------
 
 if (app.Environment.IsDevelopment())
 {
+    // Only seed the database in Development
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        DbInitializer.Seed(dbContext);
+        logger.LogInformation("Database seeding completed.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "❌ Failed to seed the database.");
+    }
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -59,6 +68,7 @@ app.UseRouting();
 app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
