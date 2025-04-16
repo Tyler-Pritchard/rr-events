@@ -32,7 +32,9 @@ namespace rr_events.Data
 
                 foreach (var seedEvent in SeedData.Events)
                 {
-                    var existing = context.Events.FirstOrDefault(e => e.Slug == seedEvent.Slug);
+                    var existing = context.Events
+                        .Include(e => e.FanClubPresale)
+                        .FirstOrDefault(e => e.Slug == seedEvent.Slug);
 
                     if (existing == null)
                     {
@@ -41,7 +43,7 @@ namespace rr_events.Data
                     }
                     else
                     {
-                        // Manually copy fields EXCEPT Id
+                        // Manually copy primitive and owned type fields (without reusing tracked instances)
                         existing.Title = seedEvent.Title;
                         existing.StartTimeUtc = seedEvent.StartTimeUtc;
                         existing.EndTimeUtc = seedEvent.EndTimeUtc;
@@ -56,8 +58,21 @@ namespace rr_events.Data
                         existing.SupportingActsSerialized = seedEvent.SupportingActsSerialized;
                         existing.EventImageUrl = seedEvent.EventImageUrl;
                         existing.IsPrivate = seedEvent.IsPrivate;
-                        existing.FanClubPresale = seedEvent.FanClubPresale;
                         existing.Slug = seedEvent.Slug;
+
+                        if (seedEvent.FanClubPresale != null)
+                        {
+                            existing.FanClubPresale = new FanClubPresale
+                            {
+                                AccessCode = seedEvent.FanClubPresale.AccessCode,
+                                StartUtc = seedEvent.FanClubPresale.StartUtc,
+                                EndUtc = seedEvent.FanClubPresale.EndUtc
+                            };
+                        }
+                        else
+                        {
+                            existing.FanClubPresale = null;
+                        }
 
                         updated++;
                     }
