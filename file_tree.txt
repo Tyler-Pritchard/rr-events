@@ -6,8 +6,6 @@
 │   ├── CustomWebApplicationFactory.cs
 │   ├── EventsEndpointTests.cs
 │   ├── UnitTest1.cs
-│   ├── bin 2
-│   ├── obj 2
 │   └── rr-events.Tests.csproj
 ├── rr-events.sln
 └── src
@@ -52,4 +50,4 @@
     ├── rr-events.csproj
     └── rr-events.http
 
-14 directories, 39 files
+12 directories, 39 files

@@ -2,34 +2,29 @@ using rr_events.Data;
 using rr_events.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ------------------------
-// 🔧 Load .env for local development only
+// 🔧 Load .env for Development
 // ------------------------
 if (builder.Environment.IsDevelopment())
 {
-    DotNetEnv.Env.Load(".env");
-    Console.WriteLine("✅ Loaded .env file for development");
+    var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+    if (File.Exists(envPath))
+    {
+        Env.Load(envPath);
+        Console.WriteLine($"✅ Loaded .env file from: {envPath}");
+    }
+    else
+    {
+        Console.WriteLine($"⚠️ .env file not found at: {envPath}");
+    }
 }
 
 // ------------------------
-// 🔧 Resolve connection string
-// ------------------------
-var resolvedConn = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__DEFAULTCONNECTION");
-if (!string.IsNullOrWhiteSpace(resolvedConn))
-{
-    builder.Configuration["ConnectionStrings:DefaultConnection"] = resolvedConn;
-    Console.WriteLine("✅ Connection string loaded from environment.");
-}
-else
-{
-    Console.WriteLine("❌ CONNECTIONSTRINGS__DEFAULTCONNECTION not found.");
-}
-
-// ------------------------
-// 🔧 Configuration layering
+// 🔧 Configuration Binding
 // ------------------------
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -38,17 +33,32 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 // ------------------------
-// 🔧 Dependency injection
+// 🔧 Resolve Connection String
 // ------------------------
-var resolvedConnectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
-if (string.IsNullOrWhiteSpace(resolvedConnectionString))
+string? connectionString;
+
+if (builder.Environment.IsDevelopment())
 {
-    Console.WriteLine("❌ No connection string found. Failing fast.");
-    throw new InvalidOperationException("Missing ConnectionStrings:DefaultConnection");
+    connectionString = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__DEFAULTCONNECTION");
+    Console.WriteLine($"✅ Dev connection string loaded from .env: {connectionString}");
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    Console.WriteLine("✅ Prod connection string loaded from Railway environment.");
 }
 
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    Console.WriteLine("❌ Failed to resolve ConnectionStrings:DefaultConnection.");
+    throw new InvalidOperationException("Missing required database connection string.");
+}
+
+// ------------------------
+// 🔧 Register Services
+// ------------------------
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(resolvedConnectionString));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddCors(options =>
 {
@@ -76,7 +86,7 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // ------------------------
-// 🚀 Pipeline
+// 🚀 App Middleware Pipeline
 // ------------------------
 if (app.Environment.IsDevelopment())
 {
@@ -91,12 +101,11 @@ if (app.Environment.IsDevelopment())
     {
         var env = app.Services.GetRequiredService<IWebHostEnvironment>();
         DbInitializer.Seed(dbContext, env);
-
-        logger.LogInformation("✅ Database seeded.");
+        logger.LogInformation("✅ Database seeded successfully.");
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "❌ Failed to seed database.");
+        logger.LogError(ex, "❌ Failed to seed the database.");
     }
 }
 
@@ -112,8 +121,9 @@ try
 catch (Exception ex)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogCritical(ex, "🔥 Fatal startup error.");
+    logger.LogCritical(ex, "🔥 Unhandled fatal exception during startup.");
     throw;
 }
 
+// Required for integration testing
 public partial class Program { }
