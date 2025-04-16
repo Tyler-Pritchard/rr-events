@@ -89,7 +89,9 @@ if (app.Environment.IsDevelopment())
 
     try
     {
-        DbInitializer.Seed(dbContext);
+        var env = app.Services.GetRequiredService<IWebHostEnvironment>();
+        DbInitializer.Seed(dbContext, env);
+
         logger.LogInformation("✅ Database seeded.");
     }
     catch (Exception ex)

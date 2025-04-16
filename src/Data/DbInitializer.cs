@@ -8,9 +8,11 @@ namespace rr_events.Data
     public static class DbInitializer
     {
 
-        public static void Seed(AppDbContext context)
+        public static void Seed(AppDbContext context, IWebHostEnvironment env)
         {
-            context.Database.Migrate();
+            if (env.IsDevelopment())
+            {
+                context.Database.Migrate();
 
             if (context.Events.Any())
                 return;
