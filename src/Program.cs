@@ -121,7 +121,12 @@ try
 catch (Exception ex)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogCritical(ex, "🔥 Unhandled fatal exception during startup.");
+
+    Console.WriteLine("🔥 Unhandled exception during startup.");
+    Console.WriteLine($"🔥 Message: {ex.Message}");
+    Console.WriteLine($"🔥 Stack Trace: {ex.StackTrace}");
+    
+    logger.LogCritical(ex, "🔥 Fatal exception during app.Run().");
     throw;
 }
 
