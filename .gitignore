@@ -79,3 +79,6 @@ coverage/
 *.vspx
 *.vspscc
 *.vssscc
+
+# Misc
+rr-events/file_tree.txt
