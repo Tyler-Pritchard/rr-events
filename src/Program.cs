@@ -86,7 +86,7 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // ------------------------
-// 🚀 App Middleware Pipeline
+// 🚀 Middleware Pipeline & Seeding
 // ------------------------
 if (app.Environment.IsDevelopment())
 {
@@ -99,17 +99,17 @@ if (app.Environment.IsDevelopment())
 
     try
     {
-        var env = app.Services.GetRequiredService<IWebHostEnvironment>();
-        if (env.IsDevelopment())
-        {
-            DbInitializer.Seed(dbContext, env);
-        }
-        logger.LogInformation("✅ Database seeded successfully.");
+        DbInitializer.Seed(dbContext, app.Environment);
+        logger.LogInformation("✅ Database seeded.");
     }
     catch (Exception ex)
     {
         logger.LogError(ex, "❌ Failed to seed the database.");
     }
+}
+else
+{
+    Console.WriteLine("📦 Production mode — skipping seed.");
 }
 
 app.UseRouting();
@@ -117,6 +117,9 @@ app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.MapControllers();
 
+// ------------------------
+// 🛠 Run and Catch Fatal Errors
+// ------------------------
 try
 {
     app.Run();
@@ -124,14 +127,11 @@ try
 catch (Exception ex)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-
     Console.WriteLine("🔥 Unhandled exception during startup.");
     Console.WriteLine($"🔥 Message: {ex.Message}");
     Console.WriteLine($"🔥 Stack Trace: {ex.StackTrace}");
-    
     logger.LogCritical(ex, "🔥 Fatal exception during app.Run().");
     throw;
 }
 
-// Required for integration testing
 public partial class Program { }

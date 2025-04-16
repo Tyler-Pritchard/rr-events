@@ -18,7 +18,8 @@
     │   └── UpdateEventRequest.cs
     ├── Data
     │   ├── AppDbContext.cs
-    │   └── DbInitializer.cs
+    │   ├── DbInitializer.cs
+    │   └── SeedData.cs
     ├── Migrations
     │   ├── 20250323060409_InitialCreate.Designer.cs
     │   ├── 20250323060409_InitialCreate.cs
@@ -50,4 +51,4 @@
     ├── rr-events.csproj
     └── rr-events.http
 
-12 directories, 39 files
+12 directories, 40 files
