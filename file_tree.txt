@@ -1,4 +1,5 @@
 .
+├── Dockerfile
 ├── README.md
 ├── file_tree.txt
 ├── nixpacks.json
@@ -51,4 +52,4 @@
     ├── rr-events.csproj
     └── rr-events.http
 
-12 directories, 40 files
+12 directories, 41 files
