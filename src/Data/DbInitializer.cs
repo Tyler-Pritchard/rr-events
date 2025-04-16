@@ -32,8 +32,7 @@ namespace rr_events.Data
 
                 foreach (var seedEvent in SeedData.Events)
                 {
-                    var existing = context.Events
-                        .FirstOrDefault(e => e.Slug == seedEvent.Slug);
+                    var existing = context.Events.FirstOrDefault(e => e.Slug == seedEvent.Slug);
 
                     if (existing == null)
                     {
@@ -42,13 +41,29 @@ namespace rr_events.Data
                     }
                     else
                     {
-                        context.Entry(existing).CurrentValues.SetValues(seedEvent);
+                        // Manually copy fields EXCEPT Id
+                        existing.Title = seedEvent.Title;
+                        existing.StartTimeUtc = seedEvent.StartTimeUtc;
+                        existing.EndTimeUtc = seedEvent.EndTimeUtc;
+                        existing.Location = seedEvent.Location;
+                        existing.Venue = seedEvent.Venue;
+                        existing.TourName = seedEvent.TourName;
+                        existing.Description = seedEvent.Description;
+                        existing.TicketsSoldOut = seedEvent.TicketsSoldOut;
+                        existing.TicketLink = seedEvent.TicketLink;
+                        existing.EnhancedExperienceSoldOut = seedEvent.EnhancedExperienceSoldOut;
+                        existing.EnhancedExperienceLink = seedEvent.EnhancedExperienceLink;
+                        existing.SupportingActsSerialized = seedEvent.SupportingActsSerialized;
+                        existing.EventImageUrl = seedEvent.EventImageUrl;
+                        existing.IsPrivate = seedEvent.IsPrivate;
+                        existing.FanClubPresale = seedEvent.FanClubPresale;
+                        existing.Slug = seedEvent.Slug;
+
                         updated++;
                     }
                 }
 
                 context.SaveChanges();
-
                 logger.LogInformation($"✅ Seed completed. Created: {created}, Updated: {updated}");
             }
             catch (Exception ex)
