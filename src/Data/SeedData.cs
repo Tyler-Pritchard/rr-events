@@ -41,7 +41,7 @@ namespace rr_events.Data
                 TicketLink = null,
                 EnhancedExperienceSoldOut = false,
                 EnhancedExperienceLink = null,
-                SupportingActsSerialized = JsonSerializer.Serialize(new List<string> { "Profane Sass", "The Buskers" }),
+                SupportingActsSerialized = JsonSerializer.Serialize(new List<string> { "", "" }),
                 EventImageUrl = null,
                 IsPrivate = false,
                 FanClubPresale = null,
