@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using rr_events.Models;
 
 namespace rr_events.Data
 {
@@ -24,29 +25,31 @@ namespace rr_events.Data
                 }
 
                 logger.LogInformation("🔧 Applying migrations...");
-                context.Database.Migrate(); // ensures the schema is created
+                context.Database.Migrate();
 
-                var anyEvents = false;
+                int created = 0;
+                int updated = 0;
 
-                try
+                foreach (var seedEvent in SeedData.Events)
                 {
-                    anyEvents = context.Events.Any(); // throws if Events table doesn't exist
-                }
-                catch (Exception ex)
-                {
-                    logger.LogWarning("⚠️ Couldn't check if events exist: " + ex.Message);
+                    var existing = context.Events
+                        .FirstOrDefault(e => e.Slug == seedEvent.Slug);
+
+                    if (existing == null)
+                    {
+                        context.Events.Add(seedEvent);
+                        created++;
+                    }
+                    else
+                    {
+                        context.Entry(existing).CurrentValues.SetValues(seedEvent);
+                        updated++;
+                    }
                 }
 
-                if (anyEvents)
-                {
-                    logger.LogInformation("📂 Events already exist — skipping seed.");
-                    return;
-                }
-
-                logger.LogInformation("🌱 Seeding events...");
-                context.Events.AddRange(SeedData.Events);
                 context.SaveChanges();
-                logger.LogInformation("✅ Seed completed. Total events added: " + SeedData.Events.Count);
+
+                logger.LogInformation($"✅ Seed completed. Created: {created}, Updated: {updated}");
             }
             catch (Exception ex)
             {
