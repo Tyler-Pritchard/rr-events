@@ -6,18 +6,14 @@ namespace rr_events.Data
 {
     public static class DbInitializer
     {
-        public static void Seed(AppDbContext context, IWebHostEnvironment env)
+        public static void Seed(AppDbContext context, IWebHostEnvironment env, bool forceSeed = false)
         {
-            var loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.AddConsole();
-            });
-
+            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             var logger = loggerFactory.CreateLogger("DbInitializer");
 
             try
             {
-                if (env.IsProduction())
+                if (!forceSeed && env.IsProduction())
                 {
                     logger.LogInformation("📦 Production environment: skipping seed and migration.");
                     return;

@@ -27,7 +27,7 @@ namespace rr_events.Controllers
 
             try
             {
-                DbInitializer.Seed(_context, _env);
+                DbInitializer.Seed(_context, _env, forceSeed: true);
                 return Ok("✅ Seed executed successfully.");
             }
             catch (Exception ex)
