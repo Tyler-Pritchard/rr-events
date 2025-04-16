@@ -81,4 +81,4 @@ coverage/
 *.vssscc
 
 # Misc
-rr-events/file_tree.txt
+file_tree.txt

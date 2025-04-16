@@ -2,73 +2,63 @@ using rr_events.Data;
 using rr_events.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using DotNetEnv;
 
-// ------------------------
-// 🔧 Create App Builder
-// ------------------------
 var builder = WebApplication.CreateBuilder(args);
 
 // ------------------------
-// 📦 Load .env in Development
+// 🔧 Load .env for local development only
 // ------------------------
 if (builder.Environment.IsDevelopment())
 {
-    var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
-    if (File.Exists(envPath))
-    {
-        Env.Load(envPath);
-        Console.WriteLine($"✅ .env file loaded from: {envPath}");
-    }
-    else
-    {
-        Console.WriteLine($"⚠️ .env file not found at: {envPath}");
-    }
+    DotNetEnv.Env.Load(".env");
+    Console.WriteLine("✅ Loaded .env file for development");
 }
 
 // ------------------------
-// 🔧 Bind Config from .env if present
+// 🔧 Resolve connection string
 // ------------------------
-var rawConn = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__DEFAULTCONNECTION");
-if (!string.IsNullOrWhiteSpace(rawConn))
+var resolvedConn = Environment.GetEnvironmentVariable("CONNECTIONSTRINGS__DEFAULTCONNECTION");
+if (!string.IsNullOrWhiteSpace(resolvedConn))
 {
-    builder.Configuration["ConnectionStrings:DefaultConnection"] = rawConn;
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = resolvedConn;
+    Console.WriteLine("✅ Connection string loaded from environment.");
+}
+else
+{
+    Console.WriteLine("❌ CONNECTIONSTRINGS__DEFAULTCONNECTION not found.");
 }
 
 // ------------------------
-// 🔧 Add JSON + Environment Config
+// 🔧 Configuration layering
 // ------------------------
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables();
 
-var effectiveConn = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($"🔍 Effective DB Connection: {(string.IsNullOrEmpty(effectiveConn) ? "❌ None found!" : "✅ Loaded")}");
-
 // ------------------------
-// 🧱 Register Services
+// 🔧 Dependency injection
 // ------------------------
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(effectiveConn));
-
-builder.Services.AddScoped<IEventQueryService, EventQueryService>();
-builder.Services.AddScoped<IEventCommandService, EventCommandService>();
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://www.robrich.band")
+        policy.WithOrigins("https://www.robrich.band", "http://localhost:3000")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
 });
 
+builder.Services.AddScoped<IEventQueryService, EventQueryService>();
+builder.Services.AddScoped<IEventCommandService, EventCommandService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(c =>
 {
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -76,11 +66,11 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-// ------------------------
-// 🚀 Build App and Configure Pipeline
-// ------------------------
 var app = builder.Build();
 
+// ------------------------
+// 🚀 Pipeline
+// ------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -93,11 +83,11 @@ if (app.Environment.IsDevelopment())
     try
     {
         DbInitializer.Seed(dbContext);
-        logger.LogInformation("✅ Database seeded successfully.");
+        logger.LogInformation("✅ Database seeded.");
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "❌ Failed to seed the database.");
+        logger.LogError(ex, "❌ Failed to seed database.");
     }
 }
 
@@ -113,9 +103,8 @@ try
 catch (Exception ex)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
-    logger.LogCritical(ex, "🔥 Unhandled exception on startup.");
+    logger.LogCritical(ex, "🔥 Fatal startup error.");
     throw;
 }
 
-// Enable integration testing
 public partial class Program { }
