@@ -56,7 +56,6 @@ log/
 Thumbs.db
 
 # Docker
-**/Dockerfile
 **/docker-compose.yml
 .dockerignore
 docker-compose.override.yml
