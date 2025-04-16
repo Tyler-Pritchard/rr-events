@@ -40,8 +40,15 @@ builder.Configuration
 // ------------------------
 // 🔧 Dependency injection
 // ------------------------
+var resolvedConnectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
+if (string.IsNullOrWhiteSpace(resolvedConnectionString))
+{
+    Console.WriteLine("❌ No connection string found. Failing fast.");
+    throw new InvalidOperationException("Missing ConnectionStrings:DefaultConnection");
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(resolvedConnectionString));
 
 builder.Services.AddCors(options =>
 {
