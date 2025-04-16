@@ -100,7 +100,10 @@ if (app.Environment.IsDevelopment())
     try
     {
         var env = app.Services.GetRequiredService<IWebHostEnvironment>();
-        DbInitializer.Seed(dbContext, env);
+        if (env.IsDevelopment())
+        {
+            DbInitializer.Seed(dbContext, env);
+        }
         logger.LogInformation("✅ Database seeded successfully.");
     }
     catch (Exception ex)
