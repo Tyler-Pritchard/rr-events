@@ -1,16 +1,16 @@
 {
-    "phases": {
-      "setup": {
-        "nixPkgs": ["dotnet-sdk_8"]
-      },
-      "build": {
-        "cmds": [
-          "dotnet publish ./src/rr-events.csproj -c Release -o out"
-        ]
-      }
+  "providers": ["dotnet"],
+  "phases": {
+    "setup": {
+      "nixPkgs": ["dotnet-sdk_8", "dotnet-runtime_8"]
     },
-    "start": {
-      "cmd": "dotnet out/rr-events.dll"
+    "build": {
+      "cmds": [
+        "dotnet publish ./src/rr-events.csproj -c Release -o out"
+      ]
     }
+  },
+  "start": {
+    "cmd": "dotnet out/rr-events.dll"
   }
-  
+}
