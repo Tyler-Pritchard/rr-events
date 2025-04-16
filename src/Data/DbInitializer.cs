@@ -38,7 +38,34 @@ namespace rr_events.Data
 
                     if (existing == null)
                     {
-                        context.Events.Add(seedEvent);
+                        var newEvent = new Event
+                        {
+                            Title = seedEvent.Title,
+                            StartTimeUtc = seedEvent.StartTimeUtc,
+                            EndTimeUtc = seedEvent.EndTimeUtc,
+                            Location = seedEvent.Location,
+                            Venue = seedEvent.Venue,
+                            TourName = seedEvent.TourName,
+                            Description = seedEvent.Description,
+                            TicketsSoldOut = seedEvent.TicketsSoldOut,
+                            TicketLink = seedEvent.TicketLink,
+                            EnhancedExperienceSoldOut = seedEvent.EnhancedExperienceSoldOut,
+                            EnhancedExperienceLink = seedEvent.EnhancedExperienceLink,
+                            SupportingActsSerialized = seedEvent.SupportingActsSerialized,
+                            EventImageUrl = seedEvent.EventImageUrl,
+                            IsPrivate = seedEvent.IsPrivate,
+                            Slug = seedEvent.Slug,
+                            FanClubPresale = seedEvent.FanClubPresale is not null
+                                ? new PresaleDetails
+                                {
+                                    AccessCode = seedEvent.FanClubPresale.AccessCode,
+                                    StartUtc = seedEvent.FanClubPresale.StartUtc,
+                                    EndUtc = seedEvent.FanClubPresale.EndUtc
+                                }
+                                : null
+                        };
+
+                        context.Events.Add(newEvent);
                         created++;
                     }
                     else
@@ -62,7 +89,8 @@ namespace rr_events.Data
 
                         if (seedEvent.FanClubPresale != null)
                         {
-                            existing.FanClubPresale = new FanClubPresale
+                            existing.FanClubPresale = new PresaleDetails
+
                             {
                                 AccessCode = seedEvent.FanClubPresale.AccessCode,
                                 StartUtc = seedEvent.FanClubPresale.StartUtc,
