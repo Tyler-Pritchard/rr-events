@@ -61,7 +61,8 @@ namespace rr_events.Services
                 Location = request.Location,
                 Slug = slug,
                 IsPrivate = request.IsPrivate,
-                TicketLink = request.TicketLink
+                TicketLink = request.TicketLink,
+                EventImageUrl = request.EventImageUrl
             };
 
             await _context.Events.AddAsync(newEvent);
@@ -79,7 +80,8 @@ namespace rr_events.Services
                 Location = newEvent.Location,
                 IsPrivate = newEvent.IsPrivate,
                 TicketLink = newEvent.TicketLink,
-                Slug = newEvent.Slug
+                Slug = newEvent.Slug,
+                EventImageUrl = newEvent.EventImageUrl,
             };
         }
 
@@ -101,6 +103,7 @@ namespace rr_events.Services
             existingEvent.IsPrivate = request.IsPrivate;
             existingEvent.TicketLink = request.TicketLink;
 
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("Updated event with ID {Id}", id);
@@ -115,6 +118,7 @@ namespace rr_events.Services
                 Location = existingEvent.Location,
                 IsPrivate = existingEvent.IsPrivate,
                 TicketLink = existingEvent.TicketLink,
+                EventImageUrl = existingEvent.EventImageUrl,
                 Slug = existingEvent.Slug 
             };
         }

@@ -22,5 +22,8 @@ namespace rr_events.DTOs
         public bool IsPrivate { get; set; }
 
         public string? TicketLink { get; set; }
+
+        public string? EventImageUrl { get; set; }
+
     }
 }

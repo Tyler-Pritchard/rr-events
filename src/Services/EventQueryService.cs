@@ -67,7 +67,8 @@ namespace rr_events.Services
                 Location = e.Location,
                 Slug = e.Slug,
                 IsPrivate = e.IsPrivate,
-                TicketLink = e.TicketLink
+                TicketLink = e.TicketLink,
+                EventImageUrl = e.EventImageUrl,
             };
         }
     }

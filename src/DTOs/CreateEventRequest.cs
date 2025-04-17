@@ -28,5 +28,8 @@ namespace rr_events.DTOs
 
         [Url(ErrorMessage = "Ticket link must be a valid URL.")]
         public string? TicketLink { get; set; }
+
+        public string? EventImageUrl { get; set; }
+
     }
 }
